@@ -1,0 +1,37 @@
+{
+  "name": "eshooks",
+  "version": "1.0.0",
+  "description": "Extremely simple hooks on ES6/ES2015",
+  "main": "./dist/index.js",
+  "engines": {
+    "node": ">=6.2.0"
+  },
+  "license": "BSD-2-Clause",
+  "author": "Eugene A. Molchanov <eugene@molchanov.in>",
+  "dependencies": {
+    "promise": "7.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.10.1",
+    "babel-preset-es2015": "6.9.0",
+    "babel-register": "6.9.0",
+    "chai": "3.5.0",
+    "mocha": "2.5.3"
+  },
+  "keywords": [
+    "hook",
+    "hooks",
+    "simple",
+    "promise",
+    "es2015",
+    "es6"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/emolchanov/eshooks.git"
+  },
+  "scripts": {
+    "prepublish": "./node_modules/.bin/babel src -d dist && npm run test",
+    "test": "node ./node_modules/.bin/mocha --compilers js:babel-register"
+  }
+}

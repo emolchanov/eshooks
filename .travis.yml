@@ -1,0 +1,9 @@
+language: node_js
+sudo: false
+cache:
+  directories:
+    - node_modules
+before_install:
+  - pip install --user codecov
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
