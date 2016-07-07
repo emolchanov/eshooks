@@ -1,10 +1,10 @@
 {
   "name": "eshooks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Extremely simple hooks on ES6/ES2015",
   "main": "./dist/index.js",
   "engines": {
-    "node": ">=6.2.0"
+    "node": ">=6.0.0"
   },
   "license": "BSD-2-Clause",
   "author": "Eugene A. Molchanov <eugene@molchanov.in>",
