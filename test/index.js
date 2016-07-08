@@ -16,9 +16,9 @@ describe('Hooks', () => {
     });
 
     it('execute hooks as registered', done => {
-        hooks.hook('ping', arg => asyncResult('A' + arg));
-        hooks.hook('ping', arg => asyncResult('B' + arg));
-        hooks.hook('ping', (arg1, arg2) => asyncResult('C' + arg1 + arg2));
+        hooks.on('ping', arg => asyncResult('A' + arg));
+        hooks.on('ping', arg => asyncResult('B' + arg));
+        hooks.on('ping', (arg1, arg2) => asyncResult('C' + arg1 + arg2));
         hooks.trigger('ping', 1, 2).then(result => {
             expect(result).to.deep.equal(['A1', 'B1', 'C12']);
             done();
@@ -26,9 +26,9 @@ describe('Hooks', () => {
     });
 
     it('execute hooks in priority order', done => {
-        hooks.hook('ping', 2, arg => asyncResult('A' + arg));
-        hooks.hook('ping', 3, arg => asyncResult('B' + arg));
-        hooks.hook('ping', 1, arg => asyncResult('C' + arg));
+        hooks.on('ping', 2, arg => asyncResult('A' + arg));
+        hooks.on('ping', 3, arg => asyncResult('B' + arg));
+        hooks.on('ping', 1, arg => asyncResult('C' + arg));
         hooks.trigger('ping', 1).then(result => {
             expect(result).to.deep.equal(['C1', 'A1', 'B1']);
             done();
@@ -37,15 +37,15 @@ describe('Hooks', () => {
 
     it('execute hooks with the correct this', done => {
         const context = {};
-        hooks.hook('ping', function (arg) {
+        hooks.on('ping', function (arg) {
             expect(this).not.equal(hooks);
             return asyncResult('A' + arg);
         }.bind(context));
-        hooks.hook('ping', function (arg) {
+        hooks.on('ping', function (arg) {
             expect(this).to.equal(context);
             return asyncResult('B' + arg);
         }.bind(context));
-        hooks.hook('ping', function (arg) {
+        hooks.on('ping', function (arg) {
             expect(this).to.equal(null);
             return asyncResult('C' + arg);
         }.bind(null));
@@ -53,9 +53,9 @@ describe('Hooks', () => {
     });
 
     it('execute a mix of synchronous and asynchronous hooks', done => {
-        hooks.hook('ping', arg => 'A' + arg);
-        hooks.hook('ping', arg => asyncResult('B' + arg));
-        hooks.hook('ping', arg => 'C' + arg);
+        hooks.on('ping', arg => 'A' + arg);
+        hooks.on('ping', arg => asyncResult('B' + arg));
+        hooks.on('ping', arg => 'C' + arg);
         hooks.trigger('ping', 1).then(result => {
             expect(result).to.deep.equal(['A1', 'B1', 'C1']);
             done();
@@ -63,9 +63,9 @@ describe('Hooks', () => {
     });
 
     it('handle asynchronous errors', done => {
-        hooks.hook('ping', arg => 'A' + arg);
-        hooks.hook('ping', arg => asyncError(123));
-        hooks.hook('ping', arg => 'C' + arg);
+        hooks.on('ping', arg => 'A' + arg);
+        hooks.on('ping', arg => asyncError(123));
+        hooks.on('ping', arg => 'C' + arg);
         hooks.trigger('ping', 1).then(() => {
             done(new Error('should not reach'));
         }, error => {
@@ -75,11 +75,11 @@ describe('Hooks', () => {
     });
 
     it('handle synchronous errors', done => {
-        hooks.hook('ping', arg => 'A' + arg);
-        hooks.hook('ping', () => {
+        hooks.on('ping', arg => 'A' + arg);
+        hooks.on('ping', () => {
             throw "error"
         });
-        hooks.hook('ping', arg => 'C' + arg);
+        hooks.on('ping', arg => 'C' + arg);
         hooks.trigger('ping', 0).then(() => {
             done(new Error('should not reach'));
         }, error => {
@@ -96,7 +96,7 @@ describe('Hooks', () => {
     });
 
     it('don`t have unexpected results when a single hook is registered', done => {
-        hooks.hook('ping', arg => asyncResult('A' + arg));
+        hooks.on('ping', arg => asyncResult('A' + arg));
         hooks.trigger('ping', 0).then(result => {
             expect(result).to.deep.equal(['A0']);
             done();
@@ -105,7 +105,7 @@ describe('Hooks', () => {
 
     it('execute error handler hooks in reverse order', done => {
         const results = [];
-        hooks.hook('ping', 1, arg => {
+        hooks.on('ping', 1, arg => {
             results.push('A');
             return asyncResult('A' + arg);
         }, (error, arg) => {
@@ -113,7 +113,7 @@ describe('Hooks', () => {
             expect(error).to.equal("error");
             expect(arg).to.equal(7);
         });
-        hooks.hook('ping', 2, arg => {
+        hooks.on('ping', 2, arg => {
             results.push('B');
             return asyncResult('B' + arg);
         }, (error, arg) => {
@@ -122,7 +122,7 @@ describe('Hooks', () => {
             expect(arg).to.equal(7);
             return asyncResult();
         });
-        hooks.hook('ping', 3, () => {
+        hooks.on('ping', 3, () => {
             results.push('C');
             return asyncError("error");
         }, () => {
@@ -137,5 +137,4 @@ describe('Hooks', () => {
             done();
         }).catch(done);
     });
-
 });

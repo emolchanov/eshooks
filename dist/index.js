@@ -33,8 +33,8 @@ var Hooks = function () {
 
 
     _createClass(Hooks, [{
-        key: 'hook',
-        value: function hook() {
+        key: 'on',
+        value: function on() {
             return Hooks.addHook.call(this, Hooks.toArray(arguments));
         }
 

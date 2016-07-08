@@ -13,7 +13,7 @@ export default class Hooks {
      * @param {Function} [errorHandler] - Handler for error. They are called in reverse order of handler.
      * @return {Hooks} - this
      */
-    hook() {
+    on() {
         return Hooks.addHook.call(this, Hooks.toArray(arguments));
     }
 
